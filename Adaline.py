@@ -3,6 +3,16 @@ import  random
 import matplotlib.pyplot as plt
 import math
 class Adaline:
+    # def __init__(self):
+    #     self.dataset_F = None
+    #     self.N_Of_epochs = None
+    #     self.L_R = None
+    #     self.Classes = None
+    #     self.Features = None
+    #     self.Threshold = None
+    #     self.Bias = None
+    #     self.weights = np.random.rand(1, 3)
+
     def __init__(self,dataset_F,N_Of_epochs,L_R,Classes,Features,Threshold,Bais):
         self.dataset_F = dataset_F
         self.N_Of_epochs = N_Of_epochs
@@ -168,3 +178,5 @@ class Adaline:
         print("\nConfusion_Matrix = \n",Confusion_Matrix)
         print("accuracy is = ", ((Confusion_Matrix[0][0] + Confusion_Matrix[1][1]) / len(test))*100,"%")
         print("done ************************************************************************************")
+
+

@@ -146,3 +146,10 @@ class Perceptron:
         self.draw_line(train,test,Columns1,Columns2)
         print("Confusion_Matrix = \n",Confusion_Matrix)
         print("accuracy is = ", (Confusion_Matrix[0][0] + Confusion_Matrix[1][1]) / 40)
+
+    def get(self):
+
+        train,test = self.shuffle()
+        print(train[:,:])
+        print(train[0], '\n')
+        print(train[0, :], '\n')

@@ -5,13 +5,11 @@ from tkinter import *
 from Perceptron import *
 from Adaline import *
 from BackProbagation import *
-from BackProbagation_mnist_dataset import *
 
 from PIL import ImageTk,Image
 
 
 #loading data
-
 def read_data():
  with open('IrisData.txt') as f:
      lines = f.readlines()
@@ -22,22 +20,6 @@ def read_data():
      dataset_X[i-1] = lines[i].split(',')[:4]
  return dataset_X
 
-
-
-def read_data2():
-    data_train = pd.read_csv('mnist_train.csv')
-    train = data_train.iloc[:, 1:data_train.shape[1] + 1]
-    target_train = data_train['label']
-    train = np.array(train)
-
-
-    data_test = pd.read_csv('mnist_test.csv')
-    test = data_test.iloc[:, 1:data_test.shape[1] + 1]
-    target_test = data_test['label']
-    test = np.array(test)
-    return train,test,target_train,target_test
-
-# print('train data \n',read_data())
 
 
 
@@ -52,9 +34,7 @@ def plot(X_axis,Y_axis,dataset_X,y1,y2):
  plt.ylabel(Y_axis)
  plt.show()
 
-
 Dataset_Of_Features = read_data()
-train,test,target_train,target_test=read_data2()
 # plot("X1", "X2", Dataset_Of_Features, 0, 1)
 # plot("X1", "X3", Dataset_Of_Features, 0, 2)
 # plot("X1", "X4", Dataset_Of_Features, 0, 3)
@@ -90,7 +70,7 @@ def run_backprobagation():
     variable_Lrate = StringVar(back_ProbForm)
     variable_Lback=StringVar(back_ProbForm)
     activation_type=StringVar(back_ProbForm)
-    var_txt = StringVar(back_ProbForm)
+
     Cbias = IntVar()
 
     variable_Lhidden_layers.set("Enter number of hidden layers")
@@ -99,8 +79,6 @@ def run_backprobagation():
     variable_Lrate.set("Enter learning rate")
     activation_type.set("Select Activation Type")
     variable_Lback.set("Back")
-    var_txt.set('seperated by spaces')
-
 
     Lepochs = Label(back_ProbForm, textvariable=variable_Lepochs, bg='#E0B0FF', fg='#FFFF00', font='Andalus 10 italic bold')
     Lrate = Label(back_ProbForm, textvariable=variable_Lrate, bg='#E0B0FF', fg='#FFFF00', font='Andalus 10 italic bold')
@@ -110,10 +88,10 @@ def run_backprobagation():
     Lback.pack()
     Lback.bind("<Button>", show1)
 
-    hidden_layers_txt =Entry(back_ProbForm,width=29,borderwidth=2)
-    neurons_txt = Entry(back_ProbForm,width=25,borderwidth=2,textvariable=var_txt ,fg='#595959', font='Andalus 10 italic')
-    lear_rate_txt = Entry(back_ProbForm,width=29,borderwidth=2)
-    epochs_txt = Entry(back_ProbForm,width=29,borderwidth=2)
+    hidden_layers_txt =Entry(back_ProbForm,width=25,borderwidth=2)
+    neurons_txt = Entry(back_ProbForm,width=25,borderwidth=2)
+    lear_rate_txt = Entry(back_ProbForm,width=25,borderwidth=2)
+    epochs_txt = Entry(back_ProbForm,width=25,borderwidth=2)
 
     Checkbias = Checkbutton(back_ProbForm, bg='#E0B0FF', fg='#FFFF00', text="Bias", font='bold', variable=Cbias)
     activationType_menu = OptionMenu(back_ProbForm,activation_type,"Sigmoid","Hyperbolic Tangent sigmoid")
@@ -135,24 +113,16 @@ def run_backprobagation():
 
     activationType_menu.place(x=20,y=240)
 
-    def run_backprobagationModel_mnist():
+    def run_backprobagationModel():
         n_neurons=list((neurons_txt.get()).split(' '))
-
-        back = BackProbagation_mnist(train,test,target_train,target_test,int(hidden_layers_txt.get()),n_neurons,float(lear_rate_txt.get()),int(epochs_txt.get()),activation_type.get(),Cbias.get())
+        back = BackProbagation(Dataset_Of_Features,int(hidden_layers_txt.get()),n_neurons,float(lear_rate_txt.get()),int(epochs_txt.get()),activation_type.get(),Cbias.get())
         back.classify()
 
 
-    def run_backprobagationModel_iris():
-        n_neurons = list((neurons_txt.get()).split(' '))
-        back = BackProbagation(Dataset_Of_Features,int(hidden_layers_txt.get()), n_neurons, float(lear_rate_txt.get()),int(epochs_txt.get()), activation_type.get(), Cbias.get())
-        back.classify()
+    backprobagationM_btn = Button(back_ProbForm, bg='#FFFF00', text="Run backprobagation", width=25,
+                                  command=run_backprobagationModel)
 
-    backprobagation_mnsit_btn = Button(back_ProbForm, bg='#FFFF00', text="Backprobagation mnist DataSet", width=25,
-                                  command=run_backprobagationModel_mnist)
-    backprobagation_iris_btn = Button(back_ProbForm, bg='#FFFF00', text="Backprobagation Iris DataSet", width=25,
-                                       command=run_backprobagationModel_iris)
-    backprobagation_mnsit_btn.place(x=350, y=300)
-    backprobagation_iris_btn.place(x=150, y=300)
+    backprobagationM_btn.place(x=300, y=290)
     MainForm.withdraw()
     back_ProbForm.mainloop()
 
@@ -200,9 +170,9 @@ def linear_classification():
     Lback.bind("<Button>",show1)
 
 
-    Eepochs = Entry(top,width=30)
-    Erate = Entry(top,width=30)
-    Threshold_txt=Entry(top,width=30)
+    Eepochs = Entry(top)
+    Erate = Entry(top)
+    Threshold_txt=Entry(top)
     Checkbias = Checkbutton(top,bg='#E0B0FF', fg='#FFFF00', text="Bias",font='bold',variable=Cbias)
 
     def collect_data():
@@ -242,8 +212,8 @@ def linear_classification():
     Erate.place(x=190,y=130)
     Threshold_txt.place(x=190,y=170)
     Checkbias.place(x=20,y=220)
-    Perceptron_btn.place(x=100, y=250)
-    Adaline_btn.place (x=300, y=250)
+    Perceptron_btn.place(x=100, y=200)
+    Adaline_btn.place (x=300, y=200)
 
 
 
@@ -259,10 +229,6 @@ MainForm.mainloop()
 
 
 #Function_collectdata that is the action pf button, the start of program,#####line_41
-
-
-
-
 
 
 
